@@ -1,3 +1,5 @@
-const mutations = {};
+const Mutations = {
+  hi: () => 'Hello!',
+};
 
-module.exports = mutations;
+module.exports = Mutations;
