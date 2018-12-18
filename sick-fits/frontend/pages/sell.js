@@ -1,10 +1,7 @@
-import Link from 'next/link';
+import CreateItem from '../components/CreateItem';
 
 export default () => (
   <div>
-    <h2>Sell!</h2>
-    <Link href="/">
-      <a>Home</a>
-    </Link>
+    <CreateItem />
   </div>
 );
