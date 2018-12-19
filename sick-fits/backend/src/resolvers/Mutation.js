@@ -12,6 +12,13 @@ const Mutations = {
   updateItem(parent, { data, id }, ctx, info) {
     return ctx.db.mutation.updateItem({ data, where: { id } }, info);
   },
+
+  async deleteItem(parent, { id }, ctx, info) {
+    const where = { id };
+    // const item = await ctx.db.item({ where });
+    // TODO: check permissions
+    return ctx.db.mutation.deleteItem({ where }, info);
+  },
 };
 
 module.exports = Mutations;

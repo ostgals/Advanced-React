@@ -3,9 +3,11 @@
 type Query {
   items: [Item]!
   item(id: ID!): Item
+  itemsConnection(where: ItemWhereInput): ItemConnection!
 }
 
 type Mutation {
   createItem(data: ItemCreateInput!): Item
   updateItem(data: ItemUpdateInput!, id: ID!): Item
+  deleteItem(id: ID!): Item
 }
