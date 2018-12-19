@@ -36,16 +36,21 @@ export default ({ page }) => (
             prefetch
             href={{ pathname: 'items', query: { page: page - 1 } }}
           >
-            <a>&laquo; Prev</a>
+            <a className="prev" aria-disabled={page <= 1}>
+              &laquo; Prev
+            </a>
           </Link>
           <p>
             {page} of {pages}
           </p>
+          <p>{count} Items Total</p>
           <Link
             prefetch
             href={{ pathname: 'items', query: { page: page + 1 } }}
           >
-            <a>Next &raquo;</a>
+            <a className="prev" aria-disabled={page >= pages}>
+              Next &raquo;
+            </a>
           </Link>
         </PaginationStyles>
       );
