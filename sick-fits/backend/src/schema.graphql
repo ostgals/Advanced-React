@@ -1,5 +1,12 @@
 # import * from './generated/prisma.graphql'
 
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  permissions: [Permission]!
+}
+
 type ResultMessage {
   message: String!
 }
@@ -30,4 +37,11 @@ type Mutation {
   """
   signin(email: String!, password: String!): User!
   signout: ResultMessage!
+
+  requestReset(email: String!): ResultMessage
+  resetPassword(
+    resetToken: String!
+    password: String!
+    confirmPassword: String!
+  ): User
 }

@@ -14,7 +14,6 @@ export default () => (
     <Columns>
       <Signup />
       <Signin />
-      <Signup />
     </Columns>
   </div>
 );
