@@ -1,5 +1,9 @@
 # import * from './generated/prisma.graphql'
 
+type ResultMessage {
+  message: String!
+}
+
 type Query {
   items(
     where: ItemWhereInput
@@ -11,10 +15,19 @@ type Query {
   item(id: ID!): Item
 
   itemsConnection(where: ItemWhereInput): ItemConnection!
+
+  me: User
 }
 
 type Mutation {
   createItem(data: ItemCreateInput!): Item
   updateItem(data: ItemUpdateInput!, id: ID!): Item
   deleteItem(id: ID!): Item
+
+  signup(email: String!, password: String!, name: String!): User!
+  """
+  WARNING! Potential bug: `signin` mutation will NEVER return `permissions` field, since prisma-binding does not fetch list fields by default!
+  """
+  signin(email: String!, password: String!): User!
+  signout: ResultMessage!
 }
