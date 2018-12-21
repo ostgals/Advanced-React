@@ -2,12 +2,20 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { randomBytes } = require('crypto');
 
+const { hasPermission } = require('../utils');
+
 const Mutations = {
-  createItem(parent, args, ctx, info) {
-    // TODO: check if user is looged in
+  createItem(parent, { data }, ctx, info) {
+    const { userId } = ctx.request;
+    if (!userId) {
+      throw new Error('You must be looged in to do that!');
+    }
     return ctx.db.mutation.createItem(
       {
-        data: { ...args.data },
+        data: {
+          ...data,
+          user: { connect: { id: userId } },
+        },
       },
       info
     );
@@ -45,7 +53,6 @@ const Mutations = {
 
   async signin(parent, { email, password }, ctx, info) {
     const user = await ctx.db.query.user({ where: { email } });
-    console.log(JSON.stringify(user));
     if (!user) {
       throw new Error(`No user found for email ${email}!`);
     }
@@ -122,6 +129,20 @@ const Mutations = {
     });
     // 5. return updatedUser
     return updatedUser;
+  },
+
+  updatePermissions(parent, { userId, permissions }, ctx, info) {
+    if (!ctx.request.user) {
+      throw new Error('You must be logged in!');
+    }
+    hasPermission(ctx.request.user, ['ADMIN', 'PERMISSIONUPDATE']);
+    return ctx.db.mutation.updateUser(
+      {
+        where: { id: userId },
+        data: { permissions: { set: permissions } },
+      },
+      info
+    );
   },
 };
 
