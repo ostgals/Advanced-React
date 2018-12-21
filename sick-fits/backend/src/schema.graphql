@@ -43,5 +43,5 @@ type Mutation {
     resetToken: String!
     password: String!
     confirmPassword: String!
-  ): User
+  ): User!
 }

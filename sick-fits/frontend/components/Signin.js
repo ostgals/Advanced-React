@@ -46,26 +46,24 @@ class Signin extends Component {
 
               <ErrorMessage error={error} />
 
-              <label htmlFor="email">
+              <label>
                 Email
                 <input
                   type="email"
                   name="email"
                   required
-                  id="email"
                   placeholder="Email"
                   value={this.state.email}
                   onChange={this.handleChange}
                 />
               </label>
 
-              <label htmlFor="password">
+              <label>
                 Password
                 <input
                   type="password"
                   name="password"
                   required
-                  id="password"
                   value={this.state.password}
                   onChange={this.handleChange}
                 />

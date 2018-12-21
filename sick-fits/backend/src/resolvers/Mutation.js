@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { randomBytes } = require('crypto');
 
+const { sendPasswordResetEmail } = require('../mail');
+
 const Mutations = {
   createItem(parent, args, ctx, info) {
     // TODO: check if user is looged in
@@ -9,7 +11,7 @@ const Mutations = {
       {
         data: { ...args.data },
       },
-      info
+      info,
     );
   },
 
@@ -83,6 +85,8 @@ const Mutations = {
       data: { resetToken, resetTokenExpiry },
     });
 
+    await sendPasswordResetEmail(email, resetToken);
+
     return {
       message: `Reset password link is sent to ${email}!`,
     };
@@ -98,13 +102,14 @@ const Mutations = {
     const [user] = await ctx.db.query.users({
       where: {
         resetToken,
-        resetTokenExpiry_gte: Date.now() - 3600000,
+        resetTokenExpiry_gte: Date.now(),
       },
       first: 1,
     });
     if (!user) {
       throw new Error('This reset token is either invalid or expired!');
     }
+    console.log(user.resetTokenExpiry, Date.now());
     // 3. update password and delete resetToken
     const updatedUser = await ctx.db.mutation.updateUser({
       where: { id: user.id },
