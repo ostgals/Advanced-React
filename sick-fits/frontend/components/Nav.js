@@ -4,6 +4,7 @@ import Link from 'next/link';
 import NavStyles from './styles/NavStyles';
 import User from './CurrentUser';
 import Signout from './Signout';
+import CartToggle from './mutations/CartToggle';
 
 export default () => (
   <User>
@@ -24,6 +25,11 @@ export default () => (
               <a>Account</a>
             </Link>
             <Signout />
+            <CartToggle>
+              {({ toggleCart }) => (
+                <button onClick={() => toggleCart(true)}>My Cart</button>
+              )}
+            </CartToggle>
           </>
         ) : (
           <Link href="/signup">

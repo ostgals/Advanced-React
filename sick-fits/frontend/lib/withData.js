@@ -13,6 +13,11 @@ function createClient({ headers }) {
         headers,
       });
     },
+    clientState: {
+      defaults: {
+        cartOpen: true,
+      },
+    },
   });
 }
 
