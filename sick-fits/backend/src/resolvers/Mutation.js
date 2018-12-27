@@ -148,6 +148,56 @@ const Mutations = {
       info
     );
   },
+
+  async addToCart(parent, { id }, ctx, info) {
+    // check if user is logged in
+    if (!ctx.request.user) {
+      throw new Error('You must be logged in to do that!');
+    }
+    // check if selected item is already in their cart
+    const [cartItem] = await ctx.db.query.cartItems({
+      where: {
+        item: { id },
+        user: { id: ctx.request.user.id },
+      },
+    });
+    if (cartItem) {
+      // if it IS then just update the quantity
+      return ctx.db.mutation.updateCartItem(
+        {
+          where: { id: cartItem.id },
+          data: { quantity: cartItem.quantity + 1 },
+        },
+        info
+      );
+    } else {
+      // if it's NOT then create new fresh&shiny cart item
+      return ctx.db.mutation.createCartItem(
+        {
+          data: {
+            quantity: 1,
+            item: { connect: { id } },
+            user: { connect: { id: ctx.request.user.id } },
+          },
+        },
+        info
+      );
+    }
+  },
+
+  async removeFromCart(parent, { id }, ctx, info) {
+    if (!ctx.request.user) {
+      throw new Error('You must be logged in to do that!');
+    }
+    const [cartItem] = await ctx.db.query.cartItems(
+      { where: { id, user: { id: ctx.request.user.id } } },
+      '{ id user { id } }'
+    );
+    if (!cartItem) {
+      throw new Error('No CartItem found!');
+    }
+    return ctx.db.mutation.deleteCartItem({ where: { id } }, info);
+  },
 };
 
 module.exports = Mutations;
